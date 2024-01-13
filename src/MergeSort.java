@@ -1,18 +1,19 @@
+import java.util.Arrays;
+
 public class MergeSort {
     public static void merge(int[] a, int p, int q, int r) {
-        int[] leftHalf = new int[q - p];
-        int[] rightHalf = new int[r - q];
-        
-        for (int i = 0; i < leftHalf.length; i++) {
-            leftHalf[i] = a[p + i];
-        }
-        for (int i = 0; i < rightHalf.length; i++) {
-            rightHalf[i] = a[q + i];
-        }
-        
+        int[] leftHalf = Arrays.copyOfRange(a, p - 1, q);
+        int[] rightHalf = Arrays.copyOfRange(a, q, r);
+
+        leftHalf = Arrays.copyOf(leftHalf, leftHalf.length + 1);
+        rightHalf = Arrays.copyOf(rightHalf, rightHalf.length + 1);
+
+        leftHalf[leftHalf.length - 1] = Integer.MAX_VALUE;
+        rightHalf[rightHalf.length - 1] = Integer.MAX_VALUE;
+
         int i = 0, j = 0;
-        for (int k = p; k < r; k++) {
-            if (i < leftHalf.length && (j >= rightHalf.length || leftHalf[i] <= rightHalf[j])) {
+        for (int k = p - 1; k < r; k++) {
+            if (leftHalf[i] <= rightHalf[j]) {
                 a[k] = leftHalf[i];
                 i++;
             } else {
@@ -21,22 +22,19 @@ public class MergeSort {
             }
         }
     }
-    
+
     public static void sort(int[] a, int p, int r) {
-        if (p < r - 1) {
+        if (p < r) {
             int q = (p + r) / 2;
             sort(a, p, q);
-            sort(a, q, r);
+            sort(a, q + 1, r);
             merge(a, p, q, r);
         }
     }
-    
+
     public static void main(String[] args) {
         int[] a = {5, 2, 4, 6, 1, 3, 2, 6};
-        sort(a, 0, a.length);
-        
-        for (int num : a) {
-            System.out.print(num + " ");
-        }
+        sort(a, 1, a.length);
+        System.out.println(Arrays.toString(a));
     }
 }
